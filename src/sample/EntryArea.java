@@ -8,18 +8,18 @@ import java.util.List;
 public class EntryArea {
     private List<TableView> tableView;
 
-    public Node getPane()
-    {
-
-    }
-
-    public List<TelefonEntry> getSelectedEntries()
-    {
-
-    }
-
-    public void setItems(List<TelefonEntry> items)
-    {
-
-    }
+//    public Node getPane()
+//    {
+//
+//    }
+//
+//    public List<TelefonEntry> getSelectedEntries()
+//    {
+//
+//    }
+//
+//    public void setItems(List<TelefonEntry> items)
+//    {
+//
+//    }
 }

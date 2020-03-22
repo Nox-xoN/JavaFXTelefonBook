@@ -6,8 +6,8 @@ import javafx.scene.control.Button;
 public class DeleteArea {
     private Button deleteBtn;
 
-    public Node getPane()
-    {
-
-    }
+//    public Node getPane()
+//    {
+//
+//    }
 }
