@@ -5,9 +5,14 @@ public class TelefonEntry {
     private String lastName;
     private String number;
 
-    public String getFirstName() {
-        return firstName;
+    public TelefonEntry(String firstName, String lastName, String number)
+    {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.number = number;
     }
+
+    public String getFirstName() { return firstName; }
 
     public String getLastName() {
         return lastName;
@@ -15,5 +20,17 @@ public class TelefonEntry {
 
     public String getNumber() {
         return number;
+    }
+
+    public void setLastName(String newValue) {
+        this.lastName = newValue;
+    }
+
+    public void setFirstName(String newValue) {
+        this.firstName = newValue;
+    }
+
+    public void setNumber(String newValue) {
+        this.number = newValue;
     }
 }
