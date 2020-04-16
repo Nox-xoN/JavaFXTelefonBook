@@ -1,6 +1,7 @@
 package sample;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.Node;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -15,8 +16,7 @@ public class EntryArea  {
     private final AnchorPane anchorPane = new AnchorPane();
     private final TableView<TelefonEntry> tableView;
 
-
-    public EntryArea(ObservableList<TelefonEntry> telefonEntries) {
+    public EntryArea(TelefonBook telefonBook) {
         tableView = new TableView<>();
         AnchorPane.setLeftAnchor(tableView, 10.0);
         AnchorPane.setRightAnchor(tableView, 10.0);
@@ -44,8 +44,12 @@ public class EntryArea  {
         tableView.getColumns().add(firstNameCol);
         tableView.getColumns().add(lastNameCol);
         tableView.getColumns().add(emailCol);
-        tableView.setItems(telefonEntries);
+        tableView.setItems(telefonBook.getSortedEntries());
         tableView.setEditable(true);
+
+        // Bind the SortedList comparator to the TableView comparator.
+        // Otherwise, sorting the TableView would have no effect.
+        telefonBook.getSortedEntries().comparatorProperty().bind(tableView.comparatorProperty());
     }
 
     public void setItems(List<TelefonEntry> items) {
@@ -56,7 +60,7 @@ public class EntryArea  {
         }
     }
 
-    public AnchorPane getAnchorPane() {
+    public Node getPane() {
         return anchorPane;
     }
 
@@ -129,6 +133,4 @@ public class EntryArea  {
     private static TelefonEntry getCurrentRow(TableColumn.CellEditEvent<TelefonEntry, String> t) {
         return t.getTableView().getItems().get(t.getTablePosition().getRow());
     }
-
-
 }

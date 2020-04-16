@@ -1,33 +1,89 @@
 package sample;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 
 public class TelefonBook {
-    private ObservableList<TelefonEntry> oTelefonNumbers = FXCollections.observableArrayList();
+    private final Path PATH_TO_SAVEFILE;
+
+    private ObservableList<TelefonEntry> oTelefonNumbers;
+    private FilteredList<TelefonEntry> fTelefonNumbers;
+    private SortedList<TelefonEntry> sTelefonNumbers;
 
 
-
-    public ObservableList<TelefonEntry> getAddresses()
+    public TelefonBook(List<TelefonEntry> entries, Path PATH_TO_SAVEFILE)
     {
+        this.oTelefonNumbers = FXCollections.observableArrayList(entries);
+        fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
+        sTelefonNumbers = new SortedList<>(fTelefonNumbers);
+
+        this.PATH_TO_SAVEFILE = PATH_TO_SAVEFILE;
+        loadFromFile(PATH_TO_SAVEFILE);
+    }
+
+
+    public ObservableList<TelefonEntry> getAllEntries() {
         return oTelefonNumbers;
     }
 
-    public List<TelefonEntry> search(String searchTerm)
-    {
-
-        return null;
+    public FilteredList<TelefonEntry> getFilteredEntries() {
+        return fTelefonNumbers;
     }
 
-    public void addEntry(TelefonEntry telefonEntry)
-    {
-        oTelefonNumbers.add(telefonEntry);
+    public SortedList<TelefonEntry> getSortedEntries() {
+        return sTelefonNumbers;
     }
 
 
+    public void saveToFile()
+    {
+        JsonFactory factory = new JsonFactory();
+        try (OutputStream os = Files.newOutputStream(PATH_TO_SAVEFILE);
+             JsonGenerator jg = factory.createGenerator(os)) {
 
+            jg.writeStartObject();
+            jg.writeArrayFieldStart("data");
+            for (TelefonEntry entry : oTelefonNumbers) {
+                jg.writeStartObject();
+                jg.writeStringField("firstName", entry.getFirstName());
+                jg.writeStringField("lastName", entry.getLastName());
+                jg.writeStringField("number", entry.getNumber());
+                jg.writeEndObject();
+            }
+            jg.writeEndArray();
+            jg.writeEndObject();
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private void loadFromFile(Path pathToSaveFile)
+    {
+        try (InputStream is = Files.newInputStream(pathToSaveFile)) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(is);
+            JsonNode items = root.get("data");
+            for (JsonNode e : items) {
+                oTelefonNumbers.add((new TelefonEntry(
+                        e.get("firstName").asText(),
+                        e.get("lastName").asText(),
+                        e.get("number").asText())));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

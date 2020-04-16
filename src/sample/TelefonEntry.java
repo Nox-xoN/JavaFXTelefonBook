@@ -12,6 +12,7 @@ public class TelefonEntry {
         this.number = number;
     }
 
+
     public String getFirstName() { return firstName; }
 
     public String getLastName() {

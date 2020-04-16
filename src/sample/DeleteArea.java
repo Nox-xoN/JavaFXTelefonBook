@@ -1,51 +1,44 @@
 package sample;
-
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 
-import java.lang.reflect.Method;
 
 public class DeleteArea {
     private final AnchorPane anchorPane = new AnchorPane();
     private final Button deleteButton = new Button("Delete");
-    private TelefonBook telefonBook;
+    private final Button addButton = new Button("Add");
+    private final Button saveButton = new Button("Save");
 
-    private Method test = EntryArea::getSelectedEntries();
-
-    DeleteArea(TelefonBook telefonBook)
-    {
-        this.telefonBook = telefonBook;
-
+    DeleteArea(Runnable deleteEntry, Runnable addEntry, Runnable save) {
         AnchorPane.setRightAnchor(deleteButton, 10.0);
         AnchorPane.setBottomAnchor(deleteButton, 10.0);
         AnchorPane.setTopAnchor(deleteButton, 10.0);
 
-        deleteButton.setOnAction(e -> deleteButtonClicked());
+        AnchorPane.setLeftAnchor(addButton, 10.0);
+        AnchorPane.setBottomAnchor(addButton, 10.0);
+        AnchorPane.setTopAnchor(addButton, 10.0);
 
-        anchorPane.getChildren().addAll(deleteButton);
+        AnchorPane.setRightAnchor(saveButton, 80.0);
+        AnchorPane.setBottomAnchor(saveButton, 10.0);
+        AnchorPane.setTopAnchor(saveButton, 10.0);
+
+        deleteButton.setOnAction(e -> {
+            deleteEntry.run();
+        });
+
+        addButton.setOnAction(e -> {
+            addEntry.run();
+        });
+
+        saveButton.setOnAction(e -> {
+            save.run();
+        });
+
+        anchorPane.getChildren().addAll(deleteButton, addButton, saveButton);
     }
 
     public Node getPane() {
         return anchorPane;
-    }
-
-    public void deleteButtonClicked()
-    {
-        ObservableList test =  FXCollections.observableArrayList();
-
-        telefonBook.getAddresses().removeAll();
-
-
-//        telefonBook.getAddresses().removeAll(EntryArea::getSelectedEntries());
-
-
-    }
-
-    public void test()
-    {
-
     }
 }
