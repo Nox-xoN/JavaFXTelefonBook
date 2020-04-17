@@ -33,7 +33,6 @@ public class TelefonBook {
         loadFromFile(PATH_TO_SAVEFILE);
     }
 
-
     public ObservableList<TelefonEntry> getAllEntries() {
         return oTelefonNumbers;
     }
@@ -46,8 +45,7 @@ public class TelefonBook {
         return sTelefonNumbers;
     }
 
-
-    public void saveToFile()
+    public void saveToFile(int bookId)
     {
         JsonFactory factory = new JsonFactory();
         try (OutputStream os = Files.newOutputStream(PATH_TO_SAVEFILE);

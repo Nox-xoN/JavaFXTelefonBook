@@ -7,19 +7,29 @@ import javafx.scene.layout.AnchorPane;
 public class DeleteArea {
     private final AnchorPane anchorPane = new AnchorPane();
     private final Button deleteButton = new Button("Delete");
-    private final Button addButton = new Button("Add");
+    private final Button addEntryButton = new Button("Add Entry");
+    private final Button addBookButton = new Button("Add Book");
+    private final Button exportButton = new Button("Export");
     private final Button saveButton = new Button("Save");
 
-    DeleteArea(Runnable deleteEntry, Runnable addEntry, Runnable save) {
+    public DeleteArea(Runnable deleteEntry, Runnable addEntry, Runnable save, Runnable addBook, Runnable exportStart) {
         AnchorPane.setRightAnchor(deleteButton, 10.0);
         AnchorPane.setBottomAnchor(deleteButton, 10.0);
         AnchorPane.setTopAnchor(deleteButton, 10.0);
 
-        AnchorPane.setLeftAnchor(addButton, 10.0);
-        AnchorPane.setBottomAnchor(addButton, 10.0);
-        AnchorPane.setTopAnchor(addButton, 10.0);
+        AnchorPane.setLeftAnchor(addEntryButton, 10.0);
+        AnchorPane.setBottomAnchor(addEntryButton, 10.0);
+        AnchorPane.setTopAnchor(addEntryButton, 10.0);
 
-        AnchorPane.setRightAnchor(saveButton, 80.0);
+        AnchorPane.setLeftAnchor(addBookButton, 95.0);
+        AnchorPane.setBottomAnchor(addBookButton, 10.0);
+        AnchorPane.setTopAnchor(addBookButton, 10.0);
+
+        AnchorPane.setLeftAnchor(exportButton, 180.0);
+        AnchorPane.setBottomAnchor(exportButton, 10.0);
+        AnchorPane.setTopAnchor(exportButton, 10.0);
+
+        AnchorPane.setRightAnchor(saveButton, 75.0);
         AnchorPane.setBottomAnchor(saveButton, 10.0);
         AnchorPane.setTopAnchor(saveButton, 10.0);
 
@@ -27,7 +37,7 @@ public class DeleteArea {
             deleteEntry.run();
         });
 
-        addButton.setOnAction(e -> {
+        addEntryButton.setOnAction(e -> {
             addEntry.run();
         });
 
@@ -35,7 +45,15 @@ public class DeleteArea {
             save.run();
         });
 
-        anchorPane.getChildren().addAll(deleteButton, addButton, saveButton);
+        addBookButton.setOnAction(e-> {
+            addBook.run();
+        });
+
+        exportButton.setOnAction(e-> {
+            exportStart.run();
+        });
+
+        anchorPane.getChildren().addAll(deleteButton, addEntryButton, saveButton, addBookButton, exportButton);
     }
 
     public Node getPane() {
