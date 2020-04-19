@@ -2,7 +2,6 @@ package sample;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
@@ -19,33 +18,38 @@ public class Main extends Application {
     private final TabPane tabPane = new TabPane();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
 
-        loadBooks();
+        loadBooksFromDirectory();
 
         primaryStage.setTitle("Telefonbook");
         primaryStage.setScene(new Scene(root, 500, 600));
         primaryStage.show();
     }
 
-    private void loadBooks() {
+    private void loadBooksFromDirectory() {
         File folder = new File(".");
         File[] listOfFiles = folder.listFiles();
 
         for (int i = 0; i < listOfFiles.length; i++) {
             if (listOfFiles[i].getName().contains(".json")) {
-                TelefonBook tB = new TelefonBook(new ArrayList<>(), Paths.get(listOfFiles[i].getName()));
-                books.add(tB);
-                addTab(tB);
+                addTelefonBook(new TelefonBook(new ArrayList<>(), Paths.get(listOfFiles[i].getName())));
             }
         }
+        if (books.isEmpty()) {
+            addTelefonBook(new TelefonBook(new ArrayList<>()));
+        }
+    }
+
+    private void addTelefonBook(TelefonBook telefonBook) {
+        books.add(telefonBook);
+        addTab(telefonBook);
     }
 
     private void addTab(TelefonBook telefonBook) {
         BorderPane tabRoot = new BorderPane();
-
         Tab tab = new Tab("Telefonbook " + books.size());
         tabPane.getTabs().add(tab);
         tab.setContent(tabRoot);
@@ -61,10 +65,10 @@ public class Main extends Application {
                     books.get(tabPane.getSelectionModel().getSelectedIndex()).getAllEntries().add(new TelefonEntry("first name", "last name", "number"));
                 },
                 () -> {
-                    books.get(tabPane.getSelectionModel().getSelectedIndex()).saveToFile(tabPane.getSelectionModel().getSelectedIndex());
+                    books.get(tabPane.getSelectionModel().getSelectedIndex()).saveToFile();
                 },
                 () -> {
-                    TelefonBook tB = new TelefonBook(new ArrayList<>(), Paths.get("data" + (books.size() + 1) + ".json"));
+                    TelefonBook tB = new TelefonBook(new ArrayList<>());
                     books.add(tB);
                     addTab(tB);
                 },
@@ -72,12 +76,12 @@ public class Main extends Application {
                     ExportWindow exportWindow = new ExportWindow(books);
 
                     List<TelefonBook> selectedBooks = exportWindow.getSelectedBooks();
-                    for(int i = 0; i < selectedBooks.size(); i++)
-                    {
-                        selectedBooks.get(i).getAllEntries().addAll(entryArea.getSelectedEntries());
+                    if (selectedBooks != null) {
+                        for (int i = 0; i < selectedBooks.size(); i++) {
+                            selectedBooks.get(i).getAllEntries().addAll(entryArea.getSelectedEntries());
+                        }
                     }
                 });
-
 
         tabRoot.setTop(searchArea.getPane());
         tabRoot.setCenter(entryArea.getPane());
@@ -86,10 +90,10 @@ public class Main extends Application {
 
     private void removeTab(TelefonBook telefonBook) {
         books.remove(telefonBook);
-    }
+        if (books.isEmpty())
+            addTelefonBook(new TelefonBook(new ArrayList<>()));
 
-    private void exportEntries(List<TelefonBook> books) {
-
+        //possible implementation of savefile deletion can be put here
     }
 
     public static void main(String[] args) {

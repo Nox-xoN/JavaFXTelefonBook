@@ -1,18 +1,14 @@
 package sample;
-import javafx.collections.FXCollections;
+
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
-import java.util.List;
 
 
-public class EntryArea  {
+public class EntryArea {
     private final AnchorPane anchorPane = new AnchorPane();
     private final TableView<TelefonEntry> tableView;
 
@@ -30,34 +26,30 @@ public class EntryArea  {
         lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         lastNameCol.setCellFactory(cellFactory);
         lastNameCol.setOnEditCommit(t -> getCurrentRow(t).setLastName(t.getNewValue()));
+        lastNameCol.prefWidthProperty().bind(tableView.widthProperty().divide(3));
 
         TableColumn<TelefonEntry, String> firstNameCol = new TableColumn<>("First Name");
         firstNameCol.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         firstNameCol.setCellFactory(cellFactory);
         firstNameCol.setOnEditCommit(t -> getCurrentRow(t).setFirstName(t.getNewValue()));
+        firstNameCol.prefWidthProperty().bind(tableView.widthProperty().divide(3));
 
         TableColumn<TelefonEntry, String> emailCol = new TableColumn<>("Number");
         emailCol.setCellValueFactory(new PropertyValueFactory<>("number"));
         emailCol.setCellFactory(cellFactory);
         emailCol.setOnEditCommit(t -> getCurrentRow(t).setNumber(t.getNewValue()));
+        emailCol.prefWidthProperty().bind(tableView.widthProperty().divide(3));
 
         tableView.getColumns().add(firstNameCol);
         tableView.getColumns().add(lastNameCol);
         tableView.getColumns().add(emailCol);
         tableView.setItems(telefonBook.getSortedEntries());
         tableView.setEditable(true);
+        tableView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
         // Bind the SortedList comparator to the TableView comparator.
         // Otherwise, sorting the TableView would have no effect.
         telefonBook.getSortedEntries().comparatorProperty().bind(tableView.comparatorProperty());
-    }
-
-    public void setItems(List<TelefonEntry> items) {
-        if (items instanceof ObservableList) {
-            tableView.setItems((ObservableList<TelefonEntry>) items);
-        } else {
-            tableView.setItems(FXCollections.observableList(items));
-        }
     }
 
     public Node getPane() {
@@ -69,7 +61,6 @@ public class EntryArea  {
     }
 
     private static class EditingCell extends TableCell<TelefonEntry, String> {
-
         private TextField textField;
 
         private EditingCell() {
@@ -117,7 +108,7 @@ public class EntryArea  {
 
         private void createTextField() {
             textField = new TextField(getString());
-            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap()* 2);
+            textField.setMinWidth(this.getWidth() - this.getGraphicTextGap() * 2);
             textField.focusedProperty().addListener((arg0, arg1, arg2) -> {
                 if (!arg2) {
                     commitEdit(textField.getText());

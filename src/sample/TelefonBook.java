@@ -12,10 +12,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 
 public class TelefonBook {
+    private final UUID UID;
     private final Path PATH_TO_SAVEFILE;
 
     private ObservableList<TelefonEntry> oTelefonNumbers;
@@ -23,12 +26,24 @@ public class TelefonBook {
     private SortedList<TelefonEntry> sTelefonNumbers;
 
 
+    public TelefonBook(List<TelefonEntry> entries)
+    {
+        this.oTelefonNumbers = FXCollections.observableArrayList(entries);
+        this.fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
+        this.sTelefonNumbers = new SortedList<>(fTelefonNumbers);
+
+        this.UID = UUID.randomUUID();
+        this.PATH_TO_SAVEFILE = Paths.get(UID.toString() + ".json");
+    }
+
     public TelefonBook(List<TelefonEntry> entries, Path PATH_TO_SAVEFILE)
     {
         this.oTelefonNumbers = FXCollections.observableArrayList(entries);
-        fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
-        sTelefonNumbers = new SortedList<>(fTelefonNumbers);
+        this.fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
+        this.sTelefonNumbers = new SortedList<>(fTelefonNumbers);
 
+        String idStr = PATH_TO_SAVEFILE.toString().substring(0,36);
+        this.UID = UUID.fromString(idStr);
         this.PATH_TO_SAVEFILE = PATH_TO_SAVEFILE;
         loadFromFile(PATH_TO_SAVEFILE);
     }
@@ -45,7 +60,7 @@ public class TelefonBook {
         return sTelefonNumbers;
     }
 
-    public void saveToFile(int bookId)
+    public void saveToFile()
     {
         JsonFactory factory = new JsonFactory();
         try (OutputStream os = Files.newOutputStream(PATH_TO_SAVEFILE);

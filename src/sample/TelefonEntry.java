@@ -5,13 +5,13 @@ public class TelefonEntry {
     private String lastName;
     private String number;
 
+
     public TelefonEntry(String firstName, String lastName, String number)
     {
         this.firstName = firstName;
         this.lastName = lastName;
         this.number = number;
     }
-
 
     public String getFirstName() { return firstName; }
 
