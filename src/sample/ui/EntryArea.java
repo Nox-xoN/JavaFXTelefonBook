@@ -1,4 +1,4 @@
-package sample;
+package sample.ui;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
@@ -6,6 +6,8 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Callback;
+import sample.data.TelefonBook;
+import sample.data.TelefonEntry;
 
 
 public class EntryArea {

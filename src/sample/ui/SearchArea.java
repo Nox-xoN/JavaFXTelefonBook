@@ -1,7 +1,8 @@
-package sample;
+package sample.ui;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import sample.data.TelefonBook;
 
 
 public class SearchArea {

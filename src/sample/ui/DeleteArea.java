@@ -1,4 +1,4 @@
-package sample;
+package sample.ui;
 
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -10,8 +10,8 @@ public class DeleteArea {
     private final AnchorPane anchorPane = new AnchorPane();
     private final HBox hBox = new HBox(10);
 
-    private final Button deleteButton = new Button("Delete Selected");
-    private final Button addEntryButton = new Button("Add Selected");
+    private final Button deleteButton = new Button("Delete Selected Entry");
+    private final Button addEntryButton = new Button("Add Entry");
     private final Button addBookButton = new Button("Add Book");
     private final Button exportButton = new Button("Export Selected");
     private final Button saveButton = new Button("Save to File");

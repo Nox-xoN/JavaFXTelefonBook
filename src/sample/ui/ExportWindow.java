@@ -1,6 +1,5 @@
-package sample;
+package sample.ui;
 
-import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
@@ -10,6 +9,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import sample.data.TelefonBook;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +24,6 @@ public class ExportWindow {
     private final Button exportButton;
     private final List<CheckBox> boxes;
     private final List<TelefonBook> books;
-    private List<TelefonBook> selectedBooks;
 
 
     public ExportWindow(List<TelefonBook> telefonBooks) {
@@ -47,7 +46,6 @@ public class ExportWindow {
         AnchorPane.setBottomAnchor(vBox, 10.0);
 
         exportButton.setOnAction(e -> {
-            getBooksFromSelected();
             stage.close();
         });
 
@@ -77,16 +75,12 @@ public class ExportWindow {
         stage.showAndWait();
     }
 
-    private void getBooksFromSelected() {
-        selectedBooks = new ArrayList<>();
-
+    public List<TelefonBook> getSelectedBooks() {
+        List<TelefonBook> selectedBooks = new ArrayList<>();
         for (int i = 0; i < boxes.size(); i++) {
             if (boxes.get(i).isSelected())
                 selectedBooks.add(books.get(i));
         }
-    }
-
-    public List<TelefonBook> getSelectedBooks() {
         return selectedBooks;
     }
 

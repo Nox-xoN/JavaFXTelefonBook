@@ -6,6 +6,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import sample.data.TelefonBook;
+import sample.data.TelefonEntry;
+import sample.ui.DeleteArea;
+import sample.ui.EntryArea;
+import sample.ui.ExportWindow;
+import sample.ui.SearchArea;
 
 import java.io.File;
 import java.nio.file.Paths;
@@ -92,8 +98,6 @@ public class Main extends Application {
         books.remove(telefonBook);
         if (books.isEmpty())
             addTelefonBook(new TelefonBook(new ArrayList<>()));
-
-        //possible implementation of savefile deletion can be put here
     }
 
     public static void main(String[] args) {
