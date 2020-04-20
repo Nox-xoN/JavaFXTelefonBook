@@ -15,8 +15,9 @@ public class DeleteArea {
     private final Button addBookButton = new Button("Add Book");
     private final Button exportButton = new Button("Export Selected");
     private final Button saveButton = new Button("Save to File");
+    private final Button loadButton = new Button("Load from File");
 
-    public DeleteArea(Runnable deleteEntry, Runnable addEntry, Runnable save, Runnable addBook, Runnable exportStart) {
+    public DeleteArea(Runnable deleteEntry, Runnable addEntry, Runnable save, Runnable addBook, Runnable exportStart, Runnable load) {
         AnchorPane.setLeftAnchor(hBox, 10.0);
         AnchorPane.setRightAnchor(hBox, 10.0);
         AnchorPane.setBottomAnchor(hBox, 10.0);
@@ -42,8 +43,12 @@ public class DeleteArea {
             exportStart.run();
         });
 
+        loadButton.setOnAction(e -> {
+            load.run();
+        });
+
         anchorPane.getChildren().add(hBox);
-        hBox.getChildren().addAll(addEntryButton, deleteButton, exportButton, saveButton, addBookButton);
+        hBox.getChildren().addAll(addEntryButton, deleteButton, exportButton, saveButton, loadButton, addBookButton);
 
     }
 

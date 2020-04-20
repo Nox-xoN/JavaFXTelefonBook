@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import sample.data.TelefonBook;
 import sample.data.TelefonEntry;
@@ -14,6 +15,7 @@ import sample.ui.ExportWindow;
 import sample.ui.SearchArea;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +24,19 @@ import java.util.List;
 public class Main extends Application {
     private List<TelefonBook> books = new ArrayList<>();
     private final TabPane tabPane = new TabPane();
+    private Stage primaryStage;
 
     @Override
     public void start(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+
         BorderPane root = new BorderPane();
         root.setCenter(tabPane);
 
         loadBooksFromDirectory();
 
         primaryStage.setTitle("Telefonbook");
-        primaryStage.setScene(new Scene(root, 500, 600));
+        primaryStage.setScene(new Scene(root, 650, 750));
         primaryStage.show();
     }
 
@@ -71,12 +76,21 @@ public class Main extends Application {
                     books.get(tabPane.getSelectionModel().getSelectedIndex()).getAllEntries().add(new TelefonEntry("first name", "last name", "number"));
                 },
                 () -> {
-                    books.get(tabPane.getSelectionModel().getSelectedIndex()).saveToFile();
+                    FileChooser fC = new FileChooser();
+                    fC.setInitialDirectory(new File("."));
+                    fC.setInitialFileName("telefonbook.json");
+                    fC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Json Files", "*.json"));
+                    File f = fC.showSaveDialog(primaryStage);
+                    if (f != null) {
+                        Path path = f.toPath();
+                        books.get(tabPane.getSelectionModel().getSelectedIndex()).saveToFile(path);
+                    }
                 },
                 () -> {
                     TelefonBook tB = new TelefonBook(new ArrayList<>());
                     books.add(tB);
                     addTab(tB);
+                    tabPane.getSelectionModel().selectLast();
                 },
                 () -> {
                     ExportWindow exportWindow = new ExportWindow(books);
@@ -86,6 +100,20 @@ public class Main extends Application {
                         for (int i = 0; i < selectedBooks.size(); i++) {
                             selectedBooks.get(i).getAllEntries().addAll(entryArea.getSelectedEntries());
                         }
+                    }
+                },
+                () -> {
+                    FileChooser fC = new FileChooser();
+                    fC.setInitialDirectory(new File("."));
+                    fC.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Json Files", "*.json"));
+                    File f = fC.showOpenDialog(primaryStage);
+                    if (f != null) {
+                        Path path = f.toPath();
+                        TelefonBook tB = new TelefonBook(new ArrayList<>());
+                        books.add(tB);
+                        tB.loadFromFile(path);
+                        addTab(tB);
+                        tabPane.getSelectionModel().selectLast();
                     }
                 });
 

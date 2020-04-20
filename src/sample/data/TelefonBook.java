@@ -1,4 +1,5 @@
 package sample.data;
+
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -7,45 +8,33 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
-import java.util.UUID;
 
 
 public class TelefonBook {
-    private final UUID UID;
-    private final Path PATH_TO_SAVEFILE;
-
     private ObservableList<TelefonEntry> oTelefonNumbers;
     private FilteredList<TelefonEntry> fTelefonNumbers;
     private SortedList<TelefonEntry> sTelefonNumbers;
 
 
-    public TelefonBook(List<TelefonEntry> entries)
-    {
+    public TelefonBook(List<TelefonEntry> entries) {
         this.oTelefonNumbers = FXCollections.observableArrayList(entries);
         this.fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
         this.sTelefonNumbers = new SortedList<>(fTelefonNumbers);
-
-        this.UID = UUID.randomUUID();
-        this.PATH_TO_SAVEFILE = Paths.get(UID.toString() + ".json");
     }
 
-    public TelefonBook(List<TelefonEntry> entries, Path PATH_TO_SAVEFILE)
-    {
+    public TelefonBook(List<TelefonEntry> entries, Path pathToSaveFile) {
         this.oTelefonNumbers = FXCollections.observableArrayList(entries);
         this.fTelefonNumbers = new FilteredList<>(oTelefonNumbers, entry -> true);
         this.sTelefonNumbers = new SortedList<>(fTelefonNumbers);
 
-        String idStr = PATH_TO_SAVEFILE.toString().substring(0,36);
-        this.UID = UUID.fromString(idStr);
-        this.PATH_TO_SAVEFILE = PATH_TO_SAVEFILE;
-        loadFromFile(PATH_TO_SAVEFILE);
+        loadFromFile(pathToSaveFile);
     }
 
     public ObservableList<TelefonEntry> getAllEntries() {
@@ -60,10 +49,9 @@ public class TelefonBook {
         return sTelefonNumbers;
     }
 
-    public void saveToFile()
-    {
+    public void saveToFile(Path path) {
         JsonFactory factory = new JsonFactory();
-        try (OutputStream os = Files.newOutputStream(PATH_TO_SAVEFILE);
+        try (OutputStream os = Files.newOutputStream(path);
              JsonGenerator jg = factory.createGenerator(os)) {
 
             jg.writeStartObject();
@@ -83,8 +71,7 @@ public class TelefonBook {
         }
     }
 
-    private void loadFromFile(Path pathToSaveFile)
-    {
+    public void loadFromFile(Path pathToSaveFile) {
         try (InputStream is = Files.newInputStream(pathToSaveFile)) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(is);
