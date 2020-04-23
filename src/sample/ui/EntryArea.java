@@ -120,6 +120,7 @@ public class EntryArea {
 
         private String getString() {
             return getItem() == null ? "" : getItem();
+            //https://github.com/Nox-xoN
         }
     }
 

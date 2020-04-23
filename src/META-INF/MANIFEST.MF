@@ -1,0 +1,4 @@
+Comment: https://github.com/Nox-xoN
+Manifest-Version: 1.0
+Main-Class: sample.Main
+
